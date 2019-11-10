@@ -21,9 +21,7 @@ struct Polygon {
 
 	Polygon() { _reserve(); }
 	Polygon(int size, bool isChain=false): size(size), isChain(isChain) { _reserve(); }
-	Polygon(std::vector<glm::vec2> model, bool isChain=false) : vertices(model), model(model), size((int)model.size()), isChain(isChain) { }
-	Polygon(const Polygon& polygon) : model(polygon.model), vertices(polygon.vertices), size(polygon.size), isChain(polygon.isChain) { }
-	Polygon(Polygon&& polygon) : model(std::move(polygon.model)), vertices(std::move(polygon.vertices)) ,size(polygon.size), isChain(polygon.isChain) { }
+	Polygon(std::vector<glm::vec2> model, bool isChain=false) : model(model), vertices(model), size((int)model.size()), isChain(isChain) { }
 
 	void update(const Transform& transform);
 

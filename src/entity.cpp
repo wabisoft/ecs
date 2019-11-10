@@ -2,7 +2,9 @@
 #include "scene.hpp"
 
 
-Component* Entity::getComponent(Component::Kind componentKind) {
-	return scene->getComponent(componentKind, entity_id);
+Entity::Entity(u8 id, Scene* p_scene) : scene_ptr(p_scene), entity_id(id) {
+	for(int i = 0; i < Component::Count; ++i) {
+		components[i] = false;
+	}
 }
 

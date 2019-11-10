@@ -31,6 +31,8 @@ private:
 int main() {
 	Scene scene;
 	std::cout << sizeof(scene) << std::endl;
-	std::cout << scene.renderables.size() << std::endl;
+	Entity& e = scene.createEntity();
+	e.addComponent<Collider>();
+	e.getComponent<Collider>();
 	return 0;
 }

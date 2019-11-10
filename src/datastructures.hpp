@@ -15,8 +15,6 @@ struct Stack : public std::stack<T, std::vector<T>> {
 	}
 };
 
-
-
 template <typename K, typename T> // T must be default initializable
 struct record_{
 	K key;

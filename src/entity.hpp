@@ -7,16 +7,23 @@
 struct Scene;
 
 struct Entity {
+	friend struct Scene;
 	friend struct slot_set<Entity, MAX_ENTITIES>;
-	Entity() { }
-	Entity(Scene* s) : scene(s) { }
 
-	Component* getComponent(Component::Kind componentKind);
+
+	template <typename T>
+	T& addComponent(); // defined in scene.hpp
+	template <typename T>
+	T& getComponent(); // definied in scene.hpp
 
 	bool components[Component::Count];
 	Transform transform;
+	Scene * scene_ptr = nullptr;
 	u8 entity_id;
-	Scene * scene = nullptr;
-};
 
+private:
+	Entity() { }
+	Entity(u8 id, Scene* p_scene);
+
+};
 
