@@ -1,16 +1,30 @@
 #include "math.hpp"
 
 
-glm::vec2 operator*(const glm::mat3& m, const glm::vec2& v) {
+using namespace glm;
+
+vec2 operator*(const mat3& m, const vec2& v) {
 	assert(m[2][2] == 1);
-	glm::vec3 temp(v, 1);
-	return (temp*m).xy;
+	vec3 temp(v, 1);
+	return xy(temp*m);
 }
 
-glm::vec2 operator*(const glm::vec2& v, const Transform& transform) {
-	glm::mat3 trnsfrm = glm::mat3(1);
-	trnsfrm = glm::translate(trnsfrm, transform.position);
-	trnsfrm = glm::rotate(trnsfrm, transform.rotation);
-	trnsfrm = glm::scale(trnsfrm, transform.scale);
+vec2 operator*(const vec2& v, const Transform& transform) {
+	mat3 trnsfrm = mat3(1);
+	trnsfrm = translate(trnsfrm, transform.position);
+	trnsfrm = rotate(trnsfrm, transform.rotation);
+	trnsfrm = scale(trnsfrm, transform.scale);
 	return trnsfrm * v;
 }
+
+float cross(vec2 a, vec2 b) {
+	return  a.x*b.y - a.y*b.x;
+}
+
+// 2 times the signed area of the triangle abc, + if triangle is CCW and - if triangle is CW
+// 0 if points collinear
+float signed2DTriangleArea(vec2 a, vec2 b, vec2 c) {
+	return cross(a-c, b-c);
+}
+
+

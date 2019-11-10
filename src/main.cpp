@@ -5,6 +5,7 @@
 
 #include "math.hpp"
 #include "datastructures.hpp"
+#include "scene.hpp"
 #include "settings.hpp"
 
 using namespace std;
@@ -26,14 +27,10 @@ private:
 };
 
 
+
 int main() {
-	glm::vec2 a[20];
-	constexpr float step = (2.f * PI) / 20;
-	for(int i = 0 ; i < 20; ++i) {
-		float theta = step * i;
-		// NOTE: negative cos makes the circle parameterization clockwise, which is important for our collision checking routine
-		a[i] = glm::vec2(-std::cos(theta), std::sin(theta));
-		std::cout << "{ " << a[i].x << ", " << a[i].y << " }" << std::endl;
-	}
+	Scene scene;
+	std::cout << sizeof(scene) << std::endl;
+	std::cout << scene.renderables.size() << std::endl;
 	return 0;
 }

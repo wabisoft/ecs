@@ -19,6 +19,11 @@ struct Component {
 		Count// the number of kinds
 	};
 
+	void update() {} // note this is not a virtual function
+	// overwrite this function in a derived class to hide this one.
+	// if you have a derived object referenced as this base and you call this function you will only ge this
+	// base function (because it's not virtual), so make sure you call update on the right type
+
 	u8 entity_id;
 };
 

@@ -1,8 +1,15 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 #include "component.hpp"
+#include "datastructures.hpp"
+
+struct Scene;
+struct Entity;
 
 struct Renderable : Component {
-	// TODO: Ian put render stuff here and in render.cpp(you'll need to make it)
+	sf::VertexBuffer glVertices;
+	Scene* scene = nullptr;
 };
 

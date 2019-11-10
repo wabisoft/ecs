@@ -1,27 +1,15 @@
 #pragma once
 
+#include <vector>
+
 #include "datastructures.hpp"
 #include "math.hpp"
 
 namespace wabi {
-/**********
- * Shapes *
- **********/
-// NOTE: !!!! Everything about our polygons assumes 2 things
-// 1) a Polygon is convex (Concave polygons won't work for collision detection, and probably to a lesser degree our method of inclusion testing (pointInside checks)
-// 2) a Polygon's model is arranged from top left first, clock wise to the last vertex
-// i.e. Polygon vertices in the model/vertices vector in order from top left to topleft clockwise
-// example:
-//      index 0					index 1
-//      	*---------------------*
-//      	|                     |
-//      	*---------------------*
-//      index 3					 index 2
-//
-//
 
 
 struct Polygon {
+
 	void _reserve() {
 		model.reserve(size);
 		vertices.reserve(size);
@@ -32,19 +20,79 @@ struct Polygon {
 	}
 
 	Polygon() { _reserve(); }
-	Polygon(int size, bool isChain=false): size(size), rotation(0), isChain(isChain) { _reserve(); }
-	Polygon(int size, float rotation, bool isChain=false) : size(size), rotation(rotation), isChain(isChain) { _reserve(); }
-	Polygon(std::vector<glm::vec2> model, float rotation, bool isChain=false) : vertices(model), model(model), rotation(rotation), size((int)model.size()), isChain(isChain) { }
+	Polygon(int size, bool isChain=false): size(size), isChain(isChain) { _reserve(); }
+	Polygon(std::vector<glm::vec2> model, bool isChain=false) : vertices(model), model(model), size((int)model.size()), isChain(isChain) { }
+	Polygon(const Polygon& polygon) : model(polygon.model), vertices(polygon.vertices), size(polygon.size), isChain(polygon.isChain) { }
+	Polygon(Polygon&& polygon) : model(std::move(polygon.model)), vertices(std::move(polygon.vertices)) ,size(polygon.size), isChain(polygon.isChain) { }
 
 	void update(const Transform& transform);
 
-	void update(Polygon& polygon, glm::vec2 position, glm::mat3 transform = glm::mat3(1));
-	float minDistFromEdge(const glm::vec2 point, const Polygon& polygon, int& edgeStartIndex, bool& onVertex, float onVertexTolerance = 1.f);
-	bool pointInside(const glm::vec2 point, const Polygon& polygon);
-	float area(const Polygon& polygon);
+	float minDistFromEdge(const glm::vec2 point, int& edgeStartIndex, bool& onVertex, float onVertexTolerance=1);
+	float minDistFromEdge(const glm::vec2 point, float onVertexTolerance) { int i; bool b; return minDistFromEdge(point, i, b, onVertexTolerance); }
+	bool pointInside(const glm::vec2 point);
+	float area();
+
 
 	std::vector<glm::vec2> model;
 	std::vector<glm::vec2> vertices;
 	int size = 0;
-	bool isChain = false
+	bool isChain = false;
+};
+
+inline void Polygon::update(const Transform& transform) {
+	for(int i = 0; i < size; ++i) {
+		vertices[i] = model[i] * transform;
+	}
 }
+
+inline float Polygon::minDistFromEdge(const glm::vec2 point, int& edgeStartIndex, bool& onVertex, float onVertexTolerance) {
+	float min = INF;
+	for (int i = 0; i < size; ++i) {
+		glm::vec2 a = vertices[i];
+		glm::vec2 b = vertices[((size_t)i+1) % vertices.size()];
+		glm::vec2 ba = b - a;
+		glm::vec2 pa = point - a;
+		float pa_d = length(pa);
+		bool _onVert = false;
+		if(pa_d <= onVertexTolerance) {
+			_onVert = true;
+		}
+		float len_ba = length(ba);
+		glm::vec2 pp = (dot(pa, ba) / len_ba) * (ba/len_ba) ;
+		pp = a + pp;
+		float dist = std::fabs(length(point - pp));
+		if(min > dist) {
+			min = dist;
+			edgeStartIndex = i;
+			onVertex = _onVert;
+		}
+		min = min > dist ? dist : min;
+	}
+	return min;
+}
+
+inline bool Polygon::pointInside(const glm::vec2 point) {
+	if(isChain) { return false; } // you can't have a point "inside" a chain" you can only intersect a chain
+	for (int i = 0; i < size; ++i) {
+		glm::vec2 a = vertices[i];
+		glm::vec2 b = vertices[(i+1) % size];
+		float sign = signed2DTriangleArea(a, b, point);
+		// If the point is on the right (remeber we are going clock wise) then return false
+		if (sign > 0) { // the > 0 here means that points on an edge are considered inside the polygon
+			return false;
+		}
+	}
+	return true;
+}
+
+inline float Polygon::area() {
+	float a = 0;
+	for (int i = 0; i < size; ++i) {
+		glm::vec2 cur = model[i];
+		glm::vec2 next= model[(i+1)%size];
+		a += (cur.y + next.y)/2 * (cur.x - next.x);
+	}
+	return std::fabs(a);
+}
+
+} // namespace wabi
