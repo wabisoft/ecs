@@ -16,8 +16,7 @@ struct Collider : Component {
 	friend struct Scene;
 	friend struct slot_set<Collider, MAX_ENTITIES>;
 
-	virtual void noop() override {}
-
+	void update(Transform&) { }
 	wabi::Polygon shape;
 	AABB aabb;
 	Scene* scene_ptr = nullptr;

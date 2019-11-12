@@ -97,7 +97,6 @@ struct Set {
 	K(*lookupProp)(const T&) = nullptr;
 };
 
-
 template <typename T, size_t N>
 struct slot_set {
 	// I don't know what you call this data structure
@@ -193,7 +192,7 @@ struct slot_set {
 			if(cur == &w) {
 				prev->next = cur->next;
 				if(cur->next == nullptr) {
-					back_ = &prev;
+					back_ = prev;
 				}
 				break;
 			}
@@ -212,6 +211,7 @@ struct slot_set {
 	iterator end() { return iterator(nullptr); }
 	T& front() { return front_->t; }
 	T& back() { return back_->t; }
+	bool has(size_t idx) const { return data[idx].active; }
 	wrapper_* i_know_what_im_doing_give_me_your_data_() {
 		return data;
 	}

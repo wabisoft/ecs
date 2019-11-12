@@ -26,13 +26,13 @@ private:
     std::chrono::time_point<clock_> beg_;
 };
 
-
-
 int main() {
 	Scene scene;
 	std::cout << sizeof(scene) << std::endl;
 	Entity& e = scene.createEntity();
 	e.addComponent<Collider>();
-	e.getComponent<Collider>();
+	e.addComponent<Render>();
+	e.addComponent<Body>();
+	scene.update();
 	return 0;
 }
