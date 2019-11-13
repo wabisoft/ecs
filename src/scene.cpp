@@ -21,13 +21,30 @@ Entity& Scene::createEntity() {
 }
 
 
-void Scene::update(f32 deltaTime) {
-	// this will be 1 frame
-	slot_set<Entity, MAX_ENTITIES>& entities = *entities_;
-	// start by stepping X physics steps, resolving collisions and then updating bodies and colliders
-	// here X is deltaTime / FIXED_TIMESTEP (step a fraction of a step for then remainder)
-	auto colliders = getComponentSet<Collider>();
-	for(auto it = colliders.begin(); it != colliders.end(); ++it) {
-		it->update(entities[it->entity_id].transform);
+void Scene::frame(f32 deltaTime) {
+	// Calculate how many steps to take for this frame
+	f32 totalSteps = deltaTime / FIXED_TIMESTEP;
+	i32 wholeSteps = (i32)totalSteps;
+	f32 fractionalStep = totalSteps - wholeSteps;
+	// take all the whole step we need to take
+	for(int i =0; i < wholeSteps; ++i) {
+		step();
 	}
+	// take 1 fractional step of the given size
+	step(fractionalStep*FIXED_TIMESTEP);
+
+	// update render components
+	slot_set<Entity, MAX_ENTITIES>& entities = *entities_;
+	auto render_components = getComponentSet<Render>();
+	for(auto it = render_components.begin(); it != render_components.end(); ++it) {
+		auto entity = entities[it->entity_id];
+		it->update(entity.transform);
+	}
+ 	// draw
+}
+
+void Scene::step(f32 deltaTime) {
+ 	// deltaTime can be less than 1 step for fractional steps but absolutely cannot be more than 1 step
+	assert(deltaTime<=FIXED_TIMESTEP);
+	// TODO: something useful
 }

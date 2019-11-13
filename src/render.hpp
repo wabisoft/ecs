@@ -43,6 +43,6 @@ inline sf::Vector2f Render::worldToScreen(const glm::vec2 v) {
 	return sf::Vector2f(v.x * xRatio, windowSize.y - (v.y * yRatio));
 }
 
-void Render::render() {
+inline void Render::render() {
 	window_ptr->draw(sprite);
 }

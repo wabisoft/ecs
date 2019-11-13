@@ -16,7 +16,7 @@ if (WIN32)
 endif (WIN32)
 
 get_filename_component(PROJECT_DIR "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
-find_package(SFML 2.5 COMPONENTS system window graphics audio REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS system window graphics audio REQUIRED)
 find_library (SFML REQUIRED sfml-window sfml-system sfml-graphics sfml-audio)
 include_directories(${SFML_INCLUDE_DIR})
 
@@ -38,5 +38,6 @@ file(GLOB_RECURSE src
 add_executable(main src/main.cpp ${src})
 
 target_compile_definitions(main PRIVATE SFML_STATIC)
+
 target_link_libraries(main sfml-window sfml-system sfml-graphics sfml-audio)
 

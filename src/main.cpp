@@ -28,11 +28,10 @@ private:
 
 int main() {
 	Scene scene;
-	std::cout << sizeof(scene) << std::endl;
 	Entity& e = scene.createEntity();
 	e.addComponent<Collider>();
 	e.addComponent<Render>();
 	e.addComponent<Body>();
-	scene.update();
+	scene.frame(0);
 	return 0;
 }

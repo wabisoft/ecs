@@ -21,7 +21,8 @@ struct Scene {
 	template <typename T>
 	T& getComponent(u8 entity_id);
 	Entity& createEntity();
-	void update(f32 deltaTime);
+	void frame(f32 deltaTime);
+	void step(f32 deltaTime=FIXED_TIMESTEP);
 
 private:
 	// these guys below are pointers because we want to be able to touch the
@@ -42,22 +43,16 @@ slot_set<T, MAX_ENTITIES>& Scene::getComponentSet() {
 
 template <typename T>
 T& Scene::addComponent(u8 entity_id) {
-	// auto set = (slot_set<T, MAX_ENTITIES>*)components_[T::kind];
-	//return set->add(T(entity_id));
 	return getComponentSet<T>().add(T(entity_id));
 }
 
 template <typename T>
 void Scene::removeComponent(u8 entity_id) {
-	// auto set = (slot_set<T, MAX_ENTITIES>*)components_[T::kind];
-	// return set->rem(entity_id);
 	return getComponentSet<T>().rem(entity_id);
 }
 
 template <typename T>
 T& Scene::getComponent(u8 entity_id) {
-	// auto set = (slot_set<T, MAX_ENTITIES>*)components_[T::kind];
-	// return (*set)[entity_id];
 	return getComponentSet<T>()[entity_id];
 }
 

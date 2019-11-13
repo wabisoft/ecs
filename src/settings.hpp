@@ -26,5 +26,6 @@ const f32 INF = std::numeric_limits<float>::infinity();
 
 
 const size_t MAX_ENTITIES = (u8)-1;
-const float METERS_PER_WINDOW_WIDTH = 128.f;
-const float METERS_PER_WINDOW_HEIGHT = 72.f;
+const f32 METERS_PER_WINDOW_WIDTH = 128.f;
+const f32 METERS_PER_WINDOW_HEIGHT = 72.f;
+const f32 FIXED_TIMESTEP = 1.f/480.f;
