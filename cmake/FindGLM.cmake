@@ -46,7 +46,6 @@ IF(GLM_DIR)
 	${_glm_HEADER_SEARCH_DIRS})
 ENDIF(GLM_DIR)
 # locate header
-message(${GLM_DIR})
 FIND_PATH(GLM_INCLUDE_DIR "glm/glm.hpp"
 PATHS ${_glm_HEADER_SEARCH_DIRS})
 INCLUDE(FindPackageHandleStandardArgs)

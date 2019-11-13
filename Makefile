@@ -7,9 +7,11 @@ BUILD_CMD=MSBuild ecs.sln /p:Configuration=$(BUILD_TYPE) /t:main
 CLEAN_CMD=rd /q /s build
 RUN_CMD=./build/$(BUILD_TYPE)/main.exe
 else
-CMAKE_ARGS=-DSFML_DIR=$(SFML_DIR) -DGLM_DIR=$(GLM_DIR) -DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+CMAKE_ARGS=-DCMAKE_BUILD_TYPE=$(BUILD_TYPE)
+CONF_CMD=sh -c ". configure.sh"
+BUILD_CMD=make
 CLEAN_CMD=rm -rf build
-# TBD
+RUN_CMD=./build/main
 endif
 
 
