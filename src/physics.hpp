@@ -7,6 +7,9 @@
 struct Scene;
 struct Entity;
 
+struct BodyDef {
+};
+
 struct Body : Component {
 	friend struct Scene;
 	friend struct slot_set<Body, MAX_ENTITIES>;
@@ -15,9 +18,14 @@ struct Body : Component {
 
 	glm::vec2 velocity = glm::vec2(0);
 	glm::vec2 acceleration = glm::vec2(0);
+	Scene* scene_ptr;
+
 	static const Component::Kind kind = Component::Body;
 private:
 	Body() {}
 	Body(u8 id) : Component(id) {}
+	Body(u8 id, Scene* s, BodyDef definition) : Component(id), scene_ptr(s) {
+		(void)definition;
+	}
 };
 

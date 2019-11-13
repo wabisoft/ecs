@@ -39,6 +39,7 @@ void Scene::frame(f32 deltaTime) {
 	for(auto it = render_components.begin(); it != render_components.end(); ++it) {
 		auto entity = entities[it->entity_id];
 		it->update(entity.transform);
+		it->render();
 	}
  	// draw
 }

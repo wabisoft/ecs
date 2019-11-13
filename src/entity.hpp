@@ -10,8 +10,8 @@ struct Entity {
 	friend struct Scene;
 	friend struct slot_set<Entity, MAX_ENTITIES>;
 
-	template <typename T>
-	T& addComponent(); // defined in scene.hpp
+	template <typename T, typename Def>
+	T& addComponent(Def definition); // defined in scene.hpp
 	template <typename T>
 	void removeComponent();
 	template <typename T>

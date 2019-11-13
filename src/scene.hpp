@@ -14,8 +14,8 @@ struct Scene {
 	~Scene();
 	template <typename T>
 	slot_set<T, MAX_ENTITIES>& getComponentSet();
-	template <typename T>
-	T& addComponent(u8 entity_id);
+	template <typename T, typename Def>
+	T& addComponent(u8 entity_id, Def definition);
 	template <typename T>
 	void removeComponent(u8 entity_id);
 	template <typename T>
@@ -33,7 +33,6 @@ private:
 
 	template <typename T>
 	static size_t componentIdx(const T& t) { return (size_t)t.entity_id; }  // used to get entity_id out of both entities and components
-
 };
 
 template <typename T>
@@ -41,9 +40,9 @@ slot_set<T, MAX_ENTITIES>& Scene::getComponentSet() {
 	return *(slot_set<T, MAX_ENTITIES>*)components_[T::kind];
 }
 
-template <typename T>
-T& Scene::addComponent(u8 entity_id) {
-	return getComponentSet<T>().add(T(entity_id));
+template <typename T, typename Def>
+T& Scene::addComponent(u8 entity_id, Def definition) {
+	return getComponentSet<T>().add(T(entity_id, this, definition));
 }
 
 template <typename T>
@@ -58,9 +57,9 @@ T& Scene::getComponent(u8 entity_id) {
 
 // Some of Entity's templates need Scene to be defined
 // so we define those templates here after the definition of Scene
-template <typename T>
-T& Entity::addComponent() {
-	return scene_ptr->addComponent<T>(entity_id);
+template <typename T, typename Def>
+T& Entity::addComponent(Def definition) {
+	return scene_ptr->addComponent<T, Def>(entity_id, definition);
 }
 
 template <typename T>

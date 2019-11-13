@@ -12,6 +12,9 @@ struct AABB {
 struct Scene;
 struct Entity;
 
+struct ColliderDef {
+};
+
 struct Collider : Component {
 	friend struct Scene;
 	friend struct slot_set<Collider, MAX_ENTITIES>;
@@ -26,5 +29,8 @@ struct Collider : Component {
 private:
 	Collider() { }
 	Collider(u8 id) : Component(id) {}
+	Collider(u8 id, Scene* s, ColliderDef definition) : Component(id), scene_ptr(s) {
+		(void)definition;
+	}
 };
 

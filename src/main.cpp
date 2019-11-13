@@ -26,39 +26,46 @@ private:
     std::chrono::time_point<clock_> beg_;
 };
 
+constexpr f32 FRAME_RATE = 60.f;
+constexpr f32 INV_FRAME_RATE = 1.f/60.f;
+
 int main() {
 	const int W = 1080;
 	const int H = 608;
 	sf::RenderWindow window(sf::VideoMode(W, H), "Waves");
-	sf::Texture boatTex;
+	Scene scene;
+	Entity& e = scene.createEntity();
+	e.addComponent<Render>(RenderDef("assets/sprites/boat.png", &window));
+	// renderComponent.window_ptr = &window;
+	// renderComponent.loadTexture("assets/sprites/boat.png");
 	// boatTex.setSmooth(true);
-	boatTex.loadFromFile("assets/sprites/boat.png");
-	sf::Sprite boatSprite(boatTex);
-	auto bounds = boatSprite.getLocalBounds();
-	boatSprite.setOrigin(bounds.width/2, bounds.height/2);
-	boatSprite.setPosition(W/2, H/2);
+	// auto bounds = renderComponent.sprite.getLocalBounds();
+	// renderComponent.sprite.setOrigin(bounds.width/2, bounds.height/2);
+	// renderComponent.sprite.setPosition(W/2, H/2);
+	e.transform.position.x = 128;
+	e.transform.position.y = 36;
 	Timer timer;
 	while(window.isOpen()) {
-		sf::Event e;
-		while(window.pollEvent(e)) {
-			switch(e.type) {
+		sf::Event event;
+		while(window.pollEvent(event)) {
+			switch(event.type) {
 				case sf::Event::Closed: window.close(); break;
+				case sf::Event::MouseButtonPressed:
+					{
+						auto v = Render::screenToWorld({event.mouseButton.x, event.mouseButton.y}, window);
+						std::cout << v.x << ", " << v.y << std::endl;
+					}
+					break;
 				default: break;
 			}
 		}
-		if(timer.elapsed() > 1.) {
-			boatSprite.move(timer.elapsed(), 0);
-			timer.reset();
-		}
+		// if(timer.elapsed() > 1.) {
+		// 	e.transform.position.x += timer.elapsed();
+		// 	timer.reset();
+		// }
 		window.clear(sf::Color::White);
-		window.draw(boatSprite);
+		scene.frame(0); // todo have a draw delta
 		window.display();
 	}
-	// Scene scene;
-	// Entity& e = scene.createEntity();
-	// e.addComponent<Collider>();
-	// e.addComponent<Render>();
-	// e.addComponent<Body>();
-	// scene.frame(0);
 	return 0;
 }

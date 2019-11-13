@@ -16,7 +16,7 @@
 struct Transform {
 	glm::vec2 position = glm::vec2(0);
 	f32 rotation = 0.f;
-	glm::vec2 scale = glm::vec2(0);
+	glm::vec2 scale = glm::vec2(1);
 };
 
 glm::vec2 operator*(const glm::mat3& m, const glm::vec2& v);
@@ -28,5 +28,10 @@ float cross(glm::vec2 a, glm::vec2 b);
 // 0 if points collinear
 float signed2DTriangleArea(glm::vec2 a, glm::vec2 b, glm::vec2 c);
 
+constexpr f32 radToDeg = 180/PI;
+constexpr f32 degToRad = PI/180;
+
+inline f32 radiansToDegrees(f32 rad) { return rad * radToDeg; }
+inline f32 degreesToRadians(f32 deg) { return deg * degToRad; }
 
 
