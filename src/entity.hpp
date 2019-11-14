@@ -13,6 +13,8 @@ struct Entity {
 	template <typename T, typename Def>
 	T& addComponent(Def definition); // defined in scene.hpp
 	template <typename T>
+	T& addComponent(); // defined in scene.hpp
+	template <typename T>
 	void removeComponent();
 	template <typename T>
 	T& getComponent(); // definied in scene.hpp

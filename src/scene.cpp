@@ -32,10 +32,9 @@ void Scene::frame(f32 deltaTime) {
 	}
 	// take 1 fractional step of the given size
 	step(fractionalStep*FIXED_TIMESTEP);
-
 	// update render components
 	slot_set<Entity, MAX_ENTITIES>& entities = *entities_;
-	auto render_components = getComponentSet<Render>();
+	slot_set<Render, MAX_ENTITIES>& render_components = getComponentSet<Render>();
 	for(auto it = render_components.begin(); it != render_components.end(); ++it) {
 		auto entity = entities[it->entity_id];
 		it->update(entity.transform);

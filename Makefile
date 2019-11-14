@@ -1,4 +1,4 @@
-.PHONY: configure make_build_directory cmake build tags clean run
+.PHONY: configure make_build_directory cmake build tags clean run debug
 
 ifeq ($(OS), Windows_NT)
 CMAKE_ARGS= -DSFML_DIR=$(SFML_DIR) -DGLM_DIR=$(GLM_DIR)
@@ -12,6 +12,7 @@ CONF_CMD=sh -c ". configure.sh"
 BUILD_CMD=make
 CLEAN_CMD=rm -rf build
 RUN_CMD=./build/main
+DEBUG_CMD=lldb build/main
 endif
 
 
@@ -32,3 +33,6 @@ clean:
 
 run:
 	$(RUN_CMD)
+
+debug:
+	$(DEBUG_CMD)

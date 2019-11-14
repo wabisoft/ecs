@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 
@@ -21,7 +22,7 @@ struct Render : Component {
 	friend struct Scene;
 	friend struct slot_set<Render, MAX_ENTITIES>;
 
-	void init(std::string path, sf::RenderWindow* win);
+	void init();
 	void update(Transform&);
 	void render();
 	void loadTexture(std::string path="");
@@ -40,19 +41,21 @@ struct Render : Component {
 
 private:
 	Render() { }
-	Render(u8 id) : Component(id) {}
-	Render(u8 id, Scene*, const RenderDef&);
+	~Render() { }
+	Render(u8 id) : Component(id) { }
+	Render(u8 id, Scene* scene_ptr, const RenderDef& definition): Component(id),
+		texturePath(definition.texturePath), window_ptr(definition.window_ptr), scene_ptr(scene_ptr) { }
 };
 
-inline Render::Render(u8 id, Scene* s, const RenderDef& definition) :
-	Component(id),
-	texturePath(definition.texturePath),
-	window_ptr(definition.window_ptr),
-	scene_ptr(s)
-{
+
+
+inline void Render::init() {
+	// The reason we don't load the texture in the ctor and instead do it here is because,
+	// if any intermediate copies of this component get destroyed then the texture will be dealloced
+	// off of vram and the texture will wind up empty. So we need to load the texture after we are
+	// we are pretty sure that it won't get destructed again. Some move semantics would be helpful
+	// here for textures, but I'm not going gonna get involved with SFML
 	loadTexture();
-	auto b = sprite.getLocalBounds();
-	sprite.setOrigin(b.width/2, b.height/2);
 }
 
 inline void Render::update(Transform& transform) {
@@ -72,6 +75,8 @@ inline void Render::loadTexture(std::string path) {
 	}
 	texture.loadFromFile(texturePath);
 	sprite.setTexture(texture);
+	auto b = sprite.getLocalBounds();
+	sprite.setOrigin(b.width/2, b.height/2);
 };
 
 inline glm::mat3 screenToWorldTransform(sf::RenderWindow& window) {

@@ -35,14 +35,9 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(W, H), "Waves");
 	Scene scene;
 	Entity& e = scene.createEntity();
-	e.addComponent<Render>(RenderDef("assets/sprites/boat.png", &window));
-	// renderComponent.window_ptr = &window;
-	// renderComponent.loadTexture("assets/sprites/boat.png");
-	// boatTex.setSmooth(true);
-	// auto bounds = renderComponent.sprite.getLocalBounds();
-	// renderComponent.sprite.setOrigin(bounds.width/2, bounds.height/2);
-	// renderComponent.sprite.setPosition(W/2, H/2);
-	e.transform.position.x = 128;
+	auto def = RenderDef("assets/sprites/boat.png", &window);
+	e.addComponent<Render>(def);
+	e.transform.position.x = 64;
 	e.transform.position.y = 36;
 	Timer timer;
 	while(window.isOpen()) {
@@ -59,10 +54,7 @@ int main() {
 				default: break;
 			}
 		}
-		// if(timer.elapsed() > 1.) {
-		// 	e.transform.position.x += timer.elapsed();
-		// 	timer.reset();
-		// }
+
 		window.clear(sf::Color::White);
 		scene.frame(0); // todo have a draw delta
 		window.display();

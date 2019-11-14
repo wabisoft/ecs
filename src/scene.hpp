@@ -17,6 +17,8 @@ struct Scene {
 	template <typename T, typename Def>
 	T& addComponent(u8 entity_id, Def definition);
 	template <typename T>
+	T& addComponent(u8 entity_id);
+	template <typename T>
 	void removeComponent(u8 entity_id);
 	template <typename T>
 	T& getComponent(u8 entity_id);
@@ -24,7 +26,7 @@ struct Scene {
 	void frame(f32 deltaTime);
 	void step(f32 deltaTime=FIXED_TIMESTEP);
 
-private:
+// private:
 	// these guys below are pointers because we want to be able to touch the
 	// scene through a pointer without blowing the cache (maybe)
 	slot_set<Entity, MAX_ENTITIES>* entities_;
@@ -42,7 +44,16 @@ slot_set<T, MAX_ENTITIES>& Scene::getComponentSet() {
 
 template <typename T, typename Def>
 T& Scene::addComponent(u8 entity_id, Def definition) {
-	return getComponentSet<T>().add(T(entity_id, this, definition));
+	T& c = getComponentSet<T>().add(T(entity_id, this, definition));
+	c.init();
+	return c;
+}
+
+template <typename T>
+T& Scene::addComponent(u8 entity_id) {
+	T& c = getComponentSet<T>().add(T(entity_id));
+	c.init;
+	return c;
 }
 
 template <typename T>
@@ -60,6 +71,11 @@ T& Scene::getComponent(u8 entity_id) {
 template <typename T, typename Def>
 T& Entity::addComponent(Def definition) {
 	return scene_ptr->addComponent<T, Def>(entity_id, definition);
+}
+
+template <typename T>
+T& Entity::addComponent() {
+	return scene_ptr->addComponent<T>(entity_id);
 }
 
 template <typename T>
