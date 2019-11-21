@@ -21,7 +21,10 @@ struct Transform {
 
 glm::vec2 operator*(const glm::mat3& m, const glm::vec2& v);
 glm::vec2 operator*(const glm::vec2&, const Transform&);
-
+glm::mat3 transformTranslation(const Transform&);
+glm::mat3 transformRotation(const Transform&);
+glm::mat3 transformScale(const Transform&);
+glm::mat3 transformTransformation(const Transform& trnsfrm);
 
 float cross(glm::vec2 a, glm::vec2 b);
 // 2 times the signed area of the triangle abc, + if triangle is CCW and - if triangle is CW

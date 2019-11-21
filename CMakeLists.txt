@@ -4,7 +4,7 @@ project(ecs)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -27,8 +27,6 @@ include_directories(${SFML_INCLUDE_DIR})
 
 find_package(GLM REQUIRED)
 include_directories(${GLM_INCLUDE_DIR})
-
-
 
 file(GLOB_RECURSE src
 	"src/*.hpp"

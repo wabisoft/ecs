@@ -67,10 +67,13 @@ int main() {
 	Scene scene;
 	scene.init(&window);
 	Entity& e = scene.createEntity();
-	auto def = RenderDef("assets/sprites/boat.png");
-	e.addComponent<Render>(def);
+	auto renderDef = RenderDef("assets/sprites/boat.png");
+	e.addComponent<Render>(renderDef);
+	auto colliderDef = ColliderDef(false, wabi::Rectangle(10, 10));
+	auto c = e.addComponent<Collider>(colliderDef);
 	e.transform.position.x = 64;
 	e.transform.position.y = 36;
+	// e.transform.rotation = degreesToRadians(45);
 	Timer timer;
 	while(window.isOpen()) {
 		sf::Event event;
@@ -87,8 +90,9 @@ int main() {
 			}
 		}
 
-		window.clear(sf::Color::White);
-		scene.frame(0); // todo have a draw delta
+		window.clear(sf::Color(201,233,246));
+		scene.frame(timer.elapsed()); // todo have a draw delta
+		timer.reset();
 		window.display();
 	}
 	return 0;

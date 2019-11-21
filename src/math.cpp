@@ -10,11 +10,36 @@ vec2 operator*(const mat3& m, const vec2& v) {
 }
 
 vec2 operator*(const vec2& v, const Transform& transform) {
-	mat3 trnsfrm = mat3(1);
-	trnsfrm = translate(trnsfrm, transform.position);
-	trnsfrm = rotate(trnsfrm, transform.rotation);
-	trnsfrm = scale(trnsfrm, transform.scale);
-	return trnsfrm * v;
+	auto m = transformTransformation(transform);
+	return m * v;
+}
+
+glm::mat3 transformTranslation(const Transform& t) {
+	return {
+		1, 0, t.position.x,
+		0, 1, t.position.y,
+		0, 0, 1
+	};
+}
+
+glm::mat3 transformRotation(const Transform& t) {
+	return {
+		std::cosf(t.rotation),	-std::sinf(t.rotation),	0,
+		std::sinf(t.rotation),	std::cosf(t.rotation),	0,
+							0,						0,	1
+	};
+}
+
+glm::mat3 transformScale(const Transform& t) {
+	return {
+		t.scale.x, 			0,	0,
+				0,	t.scale.y,	1,
+				0,			0, 	1
+	};
+}
+
+glm::mat3 transformTransformation(const Transform& t) {
+	return transformTranslation(t) * transformRotation(t) * transformScale(t);
 }
 
 float cross(vec2 a, vec2 b) {

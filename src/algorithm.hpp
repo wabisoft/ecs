@@ -15,7 +15,7 @@ void insertion_sort(Iter begin, Iter end, Pred predicate) {
 template <typename T, typename Pred>
 typename std::vector<T>::iterator sorted_insert(std::vector<T>& v, T item, Pred predicate) {
 #ifdef _DEBUG
-	auto it = std::upper_bound<std::vector<T>::iterator, T>(v.begin(), v.end(), item, predicate);
+	auto it = std::upper_bound<typename std::vector<T>::iterator, T>(v.begin(), v.end(), item, predicate);
 #endif
 	return v.insert(
 #ifdef _DEBUG
@@ -126,3 +126,5 @@ struct NaryHash {
 	}
 };
 
+template <typename T>
+void destroy_at_(T* p_t) { p_t->~T(); }
