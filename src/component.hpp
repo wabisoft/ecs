@@ -3,7 +3,10 @@
 #include "math.hpp"
 #include "geometry.hpp"
 
+#include "settings.hpp"
+
 struct Entity;
+struct RenderSystem;
 
 // See https://github.com/tobias-stein/EntityComponentSystem/ for a very
 // clever static template based approach to dynamically assigning
@@ -18,6 +21,9 @@ struct Component {
 		Render,
 		Count// the number of kinds
 	};
+
+	virtual void debugRender(RenderSystem*) {} // gives direct access to render system to let you draw what you need
+	// calls to this function are switched off in release builds
 
 	u8 entity_id = -1;
 

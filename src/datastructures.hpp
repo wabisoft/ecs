@@ -224,3 +224,4 @@ private:
 	wrapper_ * back_ = nullptr;
 	size_t(*idx_)(const T& t) = nullptr;
 };
+

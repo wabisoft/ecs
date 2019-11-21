@@ -2,10 +2,10 @@
 
 #include "collision.hpp"
 #include "component.hpp"
-#include "datastructures.hpp"
-#include "entity.hpp"
 #include "physics.hpp"
 #include "render.hpp"
+#include "datastructures.hpp"
+#include "entity.hpp"
 #include "settings.hpp"
 
 
@@ -23,6 +23,9 @@ struct Scene {
 	template <typename T>
 	T& getComponent(u8 entity_id);
 	Entity& createEntity();
+	Entity& getEntity(u8 entity_id);
+
+	void init(sf::RenderWindow*); // init MUST becalled before first frame or undefined behavior
 	void frame(f32 deltaTime);
 	void step(f32 deltaTime=FIXED_TIMESTEP);
 
@@ -30,6 +33,8 @@ struct Scene {
 	// these guys below are pointers because we want to be able to touch the
 	// scene through a pointer without blowing the cache (maybe)
 	slot_set<Entity, MAX_ENTITIES>* entities_;
+	RenderSystem renderSystem;
+	CollisionSystem collisionSystem;
 	void * components_[Component::Count];
 	u8 entity_id_seed_ = 0;
 

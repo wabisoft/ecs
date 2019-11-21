@@ -1,6 +1,6 @@
 #include "scene.hpp"
 
-Scene::Scene() {
+Scene::Scene() : renderSystem(this), collisionSystem(this) {
 	// TODO: OPTMZ: Alloc a block the size of all component sets so they are more tightly compact
 	// after thinking about it for a while, this might be really hard to do because of the varying sizes.
 	// I mean the compiler can do it so we should be able to, but it might not be worth the effort.
@@ -20,6 +20,13 @@ Entity& Scene::createEntity() {
 	return entities_->add(Entity(++entity_id_seed_, this));
 }
 
+Entity& Scene::getEntity(u8 entity_id) {
+	return (*entities_)[entity_id];
+}
+
+void Scene::init(sf::RenderWindow* window_ptr) {
+	renderSystem.window_ptr = window_ptr;
+}
 
 void Scene::frame(f32 deltaTime) {
 	// Calculate how many steps to take for this frame
@@ -33,18 +40,13 @@ void Scene::frame(f32 deltaTime) {
 	// take 1 fractional step of the given size
 	step(fractionalStep*FIXED_TIMESTEP);
 	// update render components
-	slot_set<Entity, MAX_ENTITIES>& entities = *entities_;
-	slot_set<Render, MAX_ENTITIES>& render_components = getComponentSet<Render>();
-	for(auto it = render_components.begin(); it != render_components.end(); ++it) {
-		auto entity = entities[it->entity_id];
-		it->update(entity.transform);
-		it->render();
-	}
- 	// draw
+	renderSystem.update();
 }
 
 void Scene::step(f32 deltaTime) {
  	// deltaTime can be less than 1 step for fractional steps but absolutely cannot be more than 1 step
 	assert(deltaTime<=FIXED_TIMESTEP);
-	// TODO: something useful
+	collisionSystem.update();
+	// TODO: physicsSystem.update();
+	// TODO: anything else?
 }

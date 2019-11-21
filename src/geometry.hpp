@@ -93,4 +93,46 @@ inline float Polygon::area() {
 	return std::fabs(a);
 }
 
+inline bool lineSegmentIntersection(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 d, glm::vec2 & intersection) {
+	// Return the point of intersection of 2 lineSegments
+	// if return 0.f then no intersection
+	// otherwise return depth of intersection and update intersection param
+	// See line segment intersection in owen's notebook or online
+	// http://www.cs.swan.ac.uk/~cssimon/line_intersection.html
+	float h = (d.x - c.x) * (a.y - b.y) - (a.x - b.x) * (d.y - c.y); // this is dc x ab
+	if (h == 0){
+		return false; // h is zero when the lines are colinear
+	}
+	float t = ((a.x - c.x) * (a.y - b.y) + (a.y - c.y) * (b.x - a.x)) / h;
+	float s = ((a.x - c.x) * (c.y - d.y) + (a.y - c.y) * (d.x - c.x)) / h;
+	if (s >= 0.f && s < 1.f && t >=0.f && t < 1.f) {
+		// assert(a + s * (b-a) == c + t * (d-c)); // assertion not safe because rounding error
+		intersection = a + s * (b-a);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+inline std::vector<glm::vec2> pointsOfIntersection(const Polygon& poly1, const Polygon& poly2) {
+	std::vector<glm::vec2> intersectionPoints;
+	for(int i = 0; i < poly1.size; ++i) {
+		auto a = poly1.vertices[i];
+		auto b = poly1.vertices[(i+1)%poly1.size];
+		for(int j = 0; j < poly2.size; ++j) {
+			auto c = poly2.vertices[j];
+			auto d = poly2.vertices[(j+1)%poly2.size];
+			glm::vec2 intersection(0);
+			if(lineSegmentIntersection(a, b, c, c, intersection)) {
+				// auto search = std::find(intersectionPoints.begin(), intersectionPoints.end(), intersection);
+				// if(search == intersectionPoints.end()) {
+					intersectionPoints.push_back(intersection);
+				// }
+			}
+		}
+	}
+	return intersectionPoints;
+}
+
+
 } // namespace wabi

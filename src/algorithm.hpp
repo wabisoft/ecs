@@ -21,7 +21,7 @@ typename std::vector<T>::iterator sorted_insert(std::vector<T>& v, T item, Pred 
 #ifdef _DEBUG
 		it,
 #else
-		std::upper_bound<std::vector<T>::iterator, T>(v.begin(), v.end(), item, predicate),
+		std::upper_bound<typename std::vector<T>::iterator, T>(v.begin(), v.end(), item, predicate),
 #endif
 		item
 	);
@@ -112,3 +112,17 @@ T* binary_find(
 	}
 	return nullptr;
 }
+
+template <unsigned long N>
+struct NaryHash {
+	static unsigned hash(unsigned a, unsigned b) {
+		assert(a < N && b < N);
+		return (unsigned)(a + b * N);
+	}
+
+	static void unhash(unsigned hash, unsigned& a, unsigned& b) {
+		a = (unsigned)hash % N;
+		b = (unsigned)hash / N;
+	}
+};
+

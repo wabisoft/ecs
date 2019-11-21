@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math.hpp"
+#include "datastructures.hpp"
 #include "component.hpp"
 #include "settings.hpp"
 
