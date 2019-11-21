@@ -8,6 +8,20 @@
 #include "component.hpp"
 #include "datastructures.hpp"
 
+/*
+ * This is the render system and component
+ * *Nearly* all the code and logic for rendering is contained herein
+ * there are some artifacts of this system located in scene (where scene holds an
+ * instance of renderSystem, and must initialize this system with some information about the
+ * window we're rendering.
+ * NOTE: Ian, this system currently uses sf::RenderWindow for all the opengl rendering
+ * Your mission should you choose to accept it is to adapt this system to use raw opengl and
+ * sfml only as a platform layer (if we wanna be hardcore we can write our own platform layer
+ * but the required interface for that is pretty universal so for now sfml is sufficient)
+ * GLHF
+ * See Scene::init in scene.hpp and scene.cpp so see where the render system gets initialized
+ */
+
 struct Scene;
 struct Entity;
 
