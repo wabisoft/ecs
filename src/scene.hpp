@@ -12,16 +12,10 @@
 struct Scene {
 	Scene();
 	~Scene();
+
 	template <typename T>
 	slot_set<T, MAX_ENTITIES>& getComponentSet();
-	template <typename T, typename Def>
-	T& addComponent(u8 entity_id, Def definition);
-	template <typename T>
-	T& addComponent(u8 entity_id);
-	template <typename T>
-	void removeComponent(u8 entity_id);
-	template <typename T>
-	T& getComponent(u8 entity_id);
+
 	Entity& createEntity();
 	Entity& getEntity(u8 entity_id);
 
@@ -35,7 +29,7 @@ struct Scene {
 	slot_set<Entity, MAX_ENTITIES>* entities_;
 	RenderSystem renderSystem;
 	CollisionSystem collisionSystem;
-	void * components_[Component::Count];
+	void * components_[Component::e_Count];
 	u8 entity_id_seed_ = 0;
 
 	template <typename T>
@@ -47,48 +41,39 @@ slot_set<T, MAX_ENTITIES>& Scene::getComponentSet() {
 	return *(slot_set<T, MAX_ENTITIES>*)components_[T::kind];
 }
 
-template <typename T, typename Def>
-T& Scene::addComponent(u8 entity_id, Def definition) {
-	T& c = getComponentSet<T>().add(T(entity_id, this, definition));
-	c.init();
-	return c;
-}
-
-template <typename T>
-T& Scene::addComponent(u8 entity_id) {
-	T& c = getComponentSet<T>().add(T(entity_id));
-	c.init;
-	return c;
-}
-
-template <typename T>
-void Scene::removeComponent(u8 entity_id) {
-	return getComponentSet<T>().rem(entity_id);
-}
-
-template <typename T>
-T& Scene::getComponent(u8 entity_id) {
-	return getComponentSet<T>()[entity_id];
-}
-
 // Some of Entity's templates need Scene to be defined
 // so we define those templates here after the definition of Scene
 template <typename T, typename Def>
 T& Entity::addComponent(Def definition) {
-	return scene_ptr->addComponent<T, Def>(entity_id, definition);
+	slot_set<T, MAX_ENTITIES>& set = scene_ptr->getComponentSet<T>();
+	T& component = set.add(T(entity_id, scene_ptr, definition));
+	component.init();
+	return component;
+	// return scene_ptr->addComponent<T, Def>(entity_id, definition);
 }
 
 template <typename T>
 T& Entity::addComponent() {
-	return scene_ptr->addComponent<T>(entity_id);
+	slot_set<T, MAX_ENTITIES>& set = scene_ptr->getComponentSet<T>();
+	T& component = set.add(T(entity_id, scene_ptr));
+	component.init();
+	return component;
+	// return scene_ptr->addComponent<T>(entity_id);
 }
 
 template <typename T>
 void Entity::removeComponent() {
-	return scene_ptr->removeComponent<T>(entity_id);
+	return scene_ptr->getComponentSet<T>().rem(entity_id);
+	// return scene_ptr->removeComponent<T>(entity_id);
+}
+
+template <typename T>
+bool Entity::hasComponent() {
+	return scene_ptr->getComponentSet<T>().has(entity_id);
 }
 
 template <typename T>
 T& Entity::getComponent() {
-	return scene_ptr->getComponent<T>(entity_id);
+	return scene_ptr->getComponentSet<T>()[entity_id];
 }
+

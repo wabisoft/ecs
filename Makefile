@@ -1,4 +1,4 @@
-.PHONY: buildanddebug cmake build tags clean run debug
+.PHONY: default cmake build tags clean run debug
 
 ifeq ($(OS), Windows_NT)
 CMAKE_ARGS= -DSFML_DIR=$(SFML_DIR) -DGLM_DIR=$(GLM_DIR)
@@ -15,9 +15,8 @@ endif
 
 include configure.mk
 
-
-buildanddebug:
-	make build && make debug
+default:
+	make build && make run
 
 cmake: configure.mk
 	cd build && cmake ../ $(CMAKE_ARGS)

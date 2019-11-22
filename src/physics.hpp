@@ -7,12 +7,12 @@
 struct Scene;
 struct Entity;
 
-struct BodyDef {
+struct RigidbodyDef {
 };
 
-struct Body : Component {
+struct Rigidbody : Component {
 	friend struct Scene;
-	friend struct slot_set<Body, MAX_ENTITIES>;
+	friend struct slot_set<Rigidbody, MAX_ENTITIES>;
 
 	void update(Transform&) { }
 
@@ -20,11 +20,11 @@ struct Body : Component {
 	glm::vec2 acceleration = glm::vec2(0);
 	Scene* scene_ptr;
 
-	static const Component::Kind kind = Component::Body;
+	static const Component::Kind kind = Component::e_Rigidbody;
 private:
-	Body() {}
-	Body(u8 id) : Component(id) {}
-	Body(u8 id, Scene* s, BodyDef definition) : Component(id), scene_ptr(s) {
+	Rigidbody() {}
+	Rigidbody(u8 id) : Component(id) {}
+	Rigidbody(u8 id, Scene* s, RigidbodyDef definition) : Component(id), scene_ptr(s) {
 		(void)definition;
 	}
 };

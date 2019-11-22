@@ -34,6 +34,7 @@ struct RenderSystem;
 
 struct Render : Component {
 	friend struct Scene;
+	friend struct Entity;
 	friend struct slot_set<Render, MAX_ENTITIES>;
 
 	void init();
@@ -45,7 +46,7 @@ struct Render : Component {
 
 	Scene* scene_ptr = nullptr;
 
-	static const Component::Kind kind = Component::Render;
+	static const Component::Kind kind = Component::e_Render;
 
 private:
 	Render() { }
@@ -62,6 +63,7 @@ struct RenderSystem {
 	glm::mat3 worldToScreenTransform() { return worldToScreenTransform(*window_ptr); }
 	sf::Vector2f worldToScreen(const glm::vec2 v) { return worldToScreen(v, *window_ptr); }
 	glm::vec2 screenToWorld(const sf::Vector2i v) { return screenToWorld(v, *window_ptr); }
+	glm::vec2 getSpriteWorldDimensions(const sf::Sprite& sprite);
 
 	Scene* scene_ptr;
 	sf::RenderWindow* window_ptr = nullptr;
@@ -70,3 +72,8 @@ struct RenderSystem {
 	static sf::Vector2f worldToScreen(const glm::vec2, sf::RenderWindow&);
 	static glm::vec2 screenToWorld(const sf::Vector2i, sf::RenderWindow&);
 };
+
+template <typename T>
+inline std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v) {
+	return os<<"("<<v.x<< ", "<<v.y<<")";
+}

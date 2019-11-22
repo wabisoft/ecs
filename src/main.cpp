@@ -4,6 +4,10 @@
 #include <cmath>
 #include <ctime>
 
+#ifdef _DEBUG
+#include <typeinfo>
+#endif
+
 #include "math.hpp"
 #include "datastructures.hpp"
 #include "scene.hpp"
@@ -68,11 +72,31 @@ int main() {
 	scene.init(&window);
 	Entity& e = scene.createEntity();
 	auto renderDef = RenderDef("assets/sprites/boat.png");
-	e.addComponent<Render>(renderDef);
-	auto colliderDef = ColliderDef(false, wabi::Rectangle(10, 10));
-	auto c = e.addComponent<Collider>(colliderDef);
+	Render& renderComponent = e.addComponent<Render>(renderDef);
+	auto spriteDimsM = scene.renderSystem.getSpriteWorldDimensions(renderComponent.sprite);
+	auto colliderDef = ColliderDef(false, wabi::Rectangle(spriteDimsM.x, spriteDimsM.y));
+	auto& colliderComponent = e.addComponent<Collider>(colliderDef);
+	std::cout << typeid(colliderComponent).name() << std::endl;
 	e.transform.position.x = 64;
 	e.transform.position.y = 36;
+
+	scene.frame(0.0001);
+	auto spriteRect =  renderComponent.sprite.getLocalBounds();
+	auto spriteDimsPx = sf::Vector2f(spriteRect.width, spriteRect.height);
+	std::cout << "sprite origin(px): " << renderComponent.sprite.getOrigin() << std::endl;
+	std::cout << "sprite dims (px): " << spriteDimsPx  << std::endl;
+	std::cout << "sprite dims (m): " << spriteDimsM << std::endl;
+	auto spritePosPx = renderComponent.sprite.getPosition();
+	std::cout << "sprite pos (px): " <<  spritePosPx << std::endl;
+	auto spritePosM = scene.renderSystem.screenToWorld(sf::Vector2i(spritePosPx));
+	std::cout << "sprite pos (m): " << spritePosM << std::endl;
+	auto lower = spritePosM - (spriteDimsM/2.f);
+	std::cout << "lower should be (m): " << lower << std::endl;
+	std::cout << "lower is (m): " << colliderComponent.shape.vertices[3] << std::endl;
+	auto lowerPx = scene.renderSystem.worldToScreen(lower);
+	std::cout << "Which in px is: " << lowerPx << std::endl;
+	std::cout << "And using the sprite dims(px) should be: " << spritePosPx - (spriteDimsPx/2.f) << std::endl;
+
 	// e.transform.rotation = degreesToRadians(45);
 	Timer timer;
 	while(window.isOpen()) {

@@ -18,6 +18,8 @@ struct Entity {
 	template <typename T>
 	void removeComponent();
 	template <typename T>
+	bool hasComponent();
+	template <typename T>
 	T& getComponent(); // definied in scene.hpp
 
 	Transform transform;

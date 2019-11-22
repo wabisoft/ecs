@@ -16,10 +16,10 @@ struct Component {
 		// and assert that we can list every kind of component here
 		// this makes holding component refs in the Entity struct easy
 		// if this becomes cumbersome then we should rethink it
-		Collider = 0,
-		Body,
-		Render,
-		Count// the number of kinds
+		e_Collider = 0,
+		e_Rigidbody,
+		e_Render,
+		e_Count// the number of kinds
 	};
 
 	void init() {} // override me if you wanna init your component

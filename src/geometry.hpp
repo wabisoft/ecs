@@ -38,7 +38,6 @@ struct Polygon {
 	Polygon(int size, bool isChain=false): size(size), isChain(isChain) { _reserve(); }
 	Polygon(std::vector<glm::vec2> model, bool isChain=false) : model(model), vertices(model), size((int)model.size()), isChain(isChain) { }
 	Polygon(const Polygon& other) : model(other.model), vertices(other.vertices), size(other.size), isChain(other.isChain) {}
-	// Polygon(Polygon&& other) : model(other.model), vertices(other.vertices), size(other.size), isChain(other.isChain) {}
 
 	void update(const Transform& transform);
 

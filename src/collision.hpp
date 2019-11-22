@@ -26,6 +26,7 @@ struct ColliderDef {
 
 struct Collider : Component {
 	friend struct Scene;
+	friend struct Entity;
 	friend struct slot_set<Collider, MAX_ENTITIES>;
 
 	void update();
@@ -36,10 +37,9 @@ struct Collider : Component {
 	Scene* scene_ptr = nullptr;
 	std::vector<u32> activeCollisions; // ? do I need this (the idea is this is a list of ids we are in contact with)
 
-	static const Component::Kind kind = Component::Collider;
+	static const Component::Kind kind = Component::e_Collider;
 
 private:
-	bool overlaps(const AABB& them) const;
 	Collider() { }
 	Collider(u8 id) : Component(id) {}
 	Collider(u8 id, Scene* s, const ColliderDef& definition) : Component(id), scene_ptr(s) {
@@ -62,12 +62,11 @@ struct CollisionSystem {
 	CollisionSystem(Scene* scene);
 
 	void update();
-
 	u32 getCollisionId(const Collider& c1, const Collider& c2);
 	Collision getCollision(const Collider& c1, const Collider& c2);
+	Collider& getColliderAtPosition(const glm::vec2); // get a collider at the given position
 
 	Scene* p_scene = nullptr;
 	Hash<u32, Collision> collisions;
-
 };
 
