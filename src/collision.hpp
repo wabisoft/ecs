@@ -29,8 +29,9 @@ struct Collider : Component {
 	friend struct Entity;
 	friend struct slot_set<Collider, MAX_ENTITIES>;
 
+	virtual void debugRender(RenderSystem*) override;
+
 	void update();
-	void debugRender(RenderSystem*) override;
 
 	wabi::Polygon shape;
 	AABB aabb;
@@ -54,7 +55,7 @@ struct Collision {
 	float penetration;
 	glm::vec2 normal;
 	glm::vec2 tangent;
-	ContactManifold contacts = { { 0, 0}, { 0, 0} };
+	ContactManifold contacts;
 	u8 numContacts = 0;
 };
 
@@ -63,7 +64,7 @@ struct CollisionSystem {
 
 	void update();
 	u32 getCollisionId(const Collider& c1, const Collider& c2);
-	Collision getCollision(const Collider& c1, const Collider& c2);
+	Collision getCollision(Collider& c1, Collider& c2);
 	Collider& getColliderAtPosition(const glm::vec2); // get a collider at the given position
 
 	Scene* p_scene = nullptr;

@@ -29,9 +29,9 @@ void RenderSystem::update() {
 	for(auto it = render_components.begin(); it != render_components.end(); ++it) {
 		// update the render component with entity transform and draw
 		auto entity = scene_ptr->getEntity(it->entity_id);
-		sf::Vector2f screenPos = RenderSystem::worldToScreen(entity.transform.position, *window_ptr);
+		sf::Vector2f screenPos = worldToScreen(entity.transform.position);
 		it->sprite.setPosition(screenPos);
-		it->sprite.setRotation(radiansToDegrees(entity.transform.rotation));
+		it->sprite.setRotation(-radiansToDegrees(entity.transform.rotation));
 		it->sprite.setScale(entity.transform.scale.x, entity.transform.scale.y);
 		window_ptr->draw(it->sprite);
 	}
@@ -40,7 +40,13 @@ void RenderSystem::update() {
 glm::vec2 RenderSystem::getSpriteWorldDimensions(const sf::Sprite& sprite) {
 	auto bounds = sprite.getLocalBounds(); // size in pixels
 	auto viewSize = window_ptr->getView().getSize();
-	return {((f32)bounds.width * METERS_PER_WINDOW_WIDTH)/(f32)viewSize.x, ((f32)bounds.height * METERS_PER_WINDOW_HEIGHT)/(f32)viewSize.y};
+	auto xScale = viewSize.x / METERS_PER_WINDOW_WIDTH;
+	auto yScale = viewSize.y / METERS_PER_WINDOW_HEIGHT;
+	return glm::inverse(glm::mat3{ // inverse screen scale
+		xScale, 0, 0,
+		0, -yScale, 0,
+		0, 0, 1}) * glm::vec2{bounds.width, bounds.height};
+	// return {((f32)bounds.width * METERS_PER_WINDOW_WIDTH)/(f32)viewSize.x, ((f32)bounds.height * METERS_PER_WINDOW_HEIGHT)/(f32)viewSize.y};
 }
 
 glm::mat3 RenderSystem::worldToScreenTransform(sf::RenderWindow& window) {

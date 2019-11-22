@@ -23,7 +23,7 @@ struct Component {
 	};
 
 	void init() {} // override me if you wanna init your component
-	virtual void debugRender(RenderSystem*) {} // gives direct access to render system to let you draw what you need
+	virtual void debugRender(RenderSystem*) {}; // gives direct access to render system to let you draw what you need
 	// calls to this function are switched off in release builds
 
 	u8 entity_id = -1;

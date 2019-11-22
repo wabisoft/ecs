@@ -49,6 +49,7 @@ struct Polygon {
 
 	std::vector<glm::vec2> model;
 	std::vector<glm::vec2> vertices;
+	glm::vec2 centroid = glm::vec2(0); // centroid of the vertices (centroid of model should probably be zero [but it doesn't have to be, all I'm saying is it's not useful for me])
 	int size = 0;
 	bool isChain = false;
 };

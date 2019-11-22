@@ -116,8 +116,10 @@ struct slot_set {
 	// for this reason the struct is static.
 
 	struct wrapper_ {
-		T t;
+		// NOTE: the placement of next pointer at begining is useful for traversing the list without knowing the type
+		// if you move it you won't be able to do that.
 		wrapper_* next = nullptr;
+		T t;
 		bool active = false;
 	};
 
@@ -153,7 +155,7 @@ struct slot_set {
 		size_t idx = idx_(t);
 		assert(idx < capacity_);
 		wrapper_& w = data[idx];
-		w = {t, nullptr, true};
+		w = {nullptr, t, true};
 		if(front_ == nullptr) { // add to empty list
 			front_ = &w;
 			back_ = front_;
@@ -215,13 +217,18 @@ struct slot_set {
 	wrapper_* i_know_what_im_doing_give_me_your_data_() {
 		return data;
 	}
+	wrapper_* fuck_you_give_me_your_linked_list() {
+		return front_;
+	}
 
 private:
- 	wrapper_ data[N];
-	const size_t capacity_ = N;
-	size_t size_ = 0;
+	// NOTE: the placement of the front pointer as the first member is significant for being able to traverse the linked list
+	// in the hackyest of ways (don't move it unless you never do that)
 	wrapper_ * front_ = nullptr;
 	wrapper_ * back_ = nullptr;
 	size_t(*idx_)(const T& t) = nullptr;
+	size_t size_ = 0;
+	const size_t capacity_ = N;
+ 	wrapper_ data[N];
 };
 

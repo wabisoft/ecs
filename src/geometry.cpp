@@ -3,11 +3,15 @@ namespace wabi {
 
  void Polygon::update(const Transform& transform) {
 	auto rot = transformRotation(transform);
-	auto scale = transformScale(transform);
+	// auto scale = transformScale(transform); // scale seems to skew shit slightly, TODO: figure this out
 	auto trans = transformTranslation(transform);
+	centroid = glm::vec2(0);
 	for(int i = 0; i < size; ++i) {
-		vertices[i] = trans * (scale * (rot * model[i])) ;
+		// vertices[i] = trans * (rot * (scale * model[i])) ;
+		vertices[i] = trans * (rot *  model[i]); // TODO: scale (see above)
+		centroid += vertices[i];
 	}
+	centroid /= size;
 }
 
  float Polygon::minDistFromEdge(const glm::vec2 point, int& edgeStartIndex, bool& onVertex, float onVertexTolerance) {
@@ -113,7 +117,7 @@ std::vector<glm::vec2> pointsOfIntersection(const Polygon& poly1, const Polygon&
 			auto c = poly2.vertices[j];
 			auto d = poly2.vertices[(j+1)%poly2.size];
 			glm::vec2 intersection(0);
-			if(lineSegmentIntersection(a, b, c, c, intersection)) {
+			if(lineSegmentIntersection(a, b, c, d, intersection)) {
 				// auto search = std::find(intersectionPoints.begin(), intersectionPoints.end(), intersection);
 				// if(search == intersectionPoints.end()) {
 					intersectionPoints.push_back(intersection);
