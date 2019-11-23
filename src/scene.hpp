@@ -8,7 +8,6 @@
 #include "entity.hpp"
 #include "settings.hpp"
 
-
 struct Scene {
 	friend struct Entity;
 
@@ -38,7 +37,7 @@ private:
 
 template <typename T>
 slot_set<T, MAX_ENTITIES>& Scene::getComponentSet() {
-	return *(slot_set<T, MAX_ENTITIES>*)components_[T::kind];
+	return *reinterpret_cast<slot_set<T, MAX_ENTITIES>*>(components_[T::kind]);
 }
 
 // Some of Entity's templates need Scene to be defined

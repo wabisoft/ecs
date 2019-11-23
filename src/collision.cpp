@@ -2,7 +2,6 @@
 #include "render.hpp"
 #include "scene.hpp"
 
-
 AABB::AABB(const wabi::Polygon& p) {
 	wabi::boundingPoints(p.vertices, lower, upper);
 }
@@ -15,7 +14,6 @@ bool AABB::overlaps(const AABB& them) const {
 		(them.lower.y < lower.y && lower.y < them.upper.y)    // them.lower-----this.lower-----them.upper----this.upper
 	);
 }
-
 
 void Collider::update() {
 	// TODO (owen)
@@ -43,7 +41,6 @@ void Collider::debugRender(RenderSystem* p_renderSystem) {
 		}
 	}
 }
-
 
 CollisionSystem::CollisionSystem(Scene* scene) : p_scene(scene) { }
 
@@ -82,7 +79,6 @@ Collision CollisionSystem::getCollision(Collider& c1, Collider& c2) {
 			p1 = &c2.shape;
 			p2 = &c1.shape;
 		}
-
 		for(int i = 0; i < c1.shape.size; ++i) {
 			auto a = p1->vertices[i];
 			auto b = p1->vertices[(i+1)%p1->size];

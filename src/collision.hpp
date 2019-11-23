@@ -53,8 +53,6 @@ typedef std::vector<glm::vec2> ContactManifold;
 
 struct Collision {
 	float penetration;
-	glm::vec2 normal;
-	glm::vec2 tangent;
 	ContactManifold contacts;
 	u8 numContacts = 0;
 };
