@@ -88,7 +88,8 @@ int main() {
 		}
 
 		window.clear(sf::Color::White);
-		scene.frame(0); // todo have a draw delta
+		scene.tick(timer.elapsed()); // todo have a draw delta
+		timer.reset();
 		window.display();
 	}
 	return 0;

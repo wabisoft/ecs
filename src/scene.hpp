@@ -25,8 +25,8 @@ struct Scene {
 	Entity& createEntity();
 	Entity& getEntity(u8 entity_id);
 
-	void init(sf::RenderWindow*); // init MUST becalled before first frame or undefined behavior
-	void frame(f32 deltaTime);
+	void init(sf::RenderWindow*); // init MUST be called before first frame or undefined behavior
+	void tick(f32 deltaTime);
 	void step(f32 deltaTime=FIXED_TIMESTEP);
 
 // private:

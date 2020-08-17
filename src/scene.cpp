@@ -28,7 +28,7 @@ void Scene::init(sf::RenderWindow* window_ptr) {
 	renderSystem.window_ptr = window_ptr;
 }
 
-void Scene::frame(f32 deltaTime) {
+void Scene::tick(f32 deltaTime) {
 	// Calculate how many steps to take for this frame
 	f32 totalSteps = deltaTime / FIXED_TIMESTEP;
 	i32 wholeSteps = (i32)totalSteps;

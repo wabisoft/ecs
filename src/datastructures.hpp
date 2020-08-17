@@ -103,12 +103,12 @@ struct slot_set {
 	// but I designed to be very fast for random access and almost as fast to traverse
 	// it pays for that by being pretty slow to insert and remove from
 	// as well as having a static size, so it's not super memory friendly
-	// This structure is suitable for my purpose of accessing elements of vary sets sharing a commond id
+	// This structure is suitable for my purpose of accessing elements of vary sets sharing a common id
 	// I use the common id as the index into the set
 	// the slotted set maintains a fragmented array of T, each active element of the array
 	// is also a sorted linked list of all other active elements allowing quick traversal of the list
 	// this structure is probably not suitable for sets larger than 1000
-	// Althought this struct defines and iterator type and has a begin and an end, I wouldn't use
+	// Although this struct defines an iterator type and has a `begin()` and an `end()`, I wouldn't use
 	// the interface for much more than looping, viz. don't go using the stl iterator algorithms
 	// without extensively testing them first.
 	// NOTE: this struct could very easily become a dynamically sized but then pointers to elements
